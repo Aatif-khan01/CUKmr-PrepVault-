@@ -221,13 +221,13 @@ const Programs = () => {
                                     return (
                                       <div
                                         key={r.id}
-                                        className="flex items-center justify-between p-3 rounded-lg border transition-colors duration-150 overflow-hidden"
+                                        className="flex items-center justify-between p-3 rounded-lg border transition-colors duration-150"
                                         style={{
                                           backgroundColor: CARD_BG,
                                           borderColor: `${BRAND_LIGHT}33`,
                                         }}
                                       >
-                                        <div className="flex items-center space-x-3 flex-1 min-w-0 overflow-hidden">
+                                        <div className="flex items-center space-x-3 flex-1">
                                           <div
                                             className="w-8 h-8 rounded-full flex items-center justify-center"
                                             style={{ backgroundColor: `${BRAND_LIGHT}33` }}
@@ -238,7 +238,7 @@ const Programs = () => {
                                             />
                                           </div>
                                           <div className="flex-1">
-                                            <p className="font-medium text-[#333] text-sm truncate">
+                                            <p className="font-medium text-[#333] text-sm">
                                               {r.title}
                                             </p>
                                             <p className="text-xs text-[#555]">
@@ -252,7 +252,7 @@ const Programs = () => {
                                         <button
                                           onClick={() => handleDownload(r)}
                                           disabled={isDownloading}
-                                          className="flex-shrink-0 flex items-center space-x-1 px-3 py-1 text-xs rounded-md transition-colors duration-150 disabled:opacity-50"
+                                          className="flex items-center space-x-1 px-3 py-1 text-xs rounded-md transition-colors duration-150 disabled:opacity-50"
                                           style={{
                                             backgroundColor: BRAND,
                                             color: '#fff',
