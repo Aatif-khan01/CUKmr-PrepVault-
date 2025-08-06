@@ -2,6 +2,7 @@ import React from 'react';
 import { Linkedin } from 'lucide-react';
 import AatifImg from '../assets/Aatif.jpg';
 import AerafImg from '../assets/Aeraf.jpg';
+import IyadImg from '../assets/Iyad.jpg';
 
 /* ───────── Brand palette (same constants you used elsewhere) ───────── */
 const BRAND       = '#47677F';
@@ -15,12 +16,21 @@ const contributors = [
     role: 'Full Stack Web Developer',
     img:  AatifImg,
     url:  'https://www.linkedin.com/in/aatif-khan-390036273/',
+    isSpecial: true, // Mark Aatif as special
   },
   {
     name: 'Mohammad Aeraf Rouf',
     role: 'UI/UX Designer',
     img:  AerafImg,
     url:  'https://www.linkedin.com/in/mohammad-aeraf-rouf-dar-80ba0a323/',
+    isSpecial: false,
+  },
+  {
+    name: 'Sheikh Iyad',
+    role: 'Resource Manager',
+    img:  IyadImg,
+    url:  'https://www.linkedin.com/in/sheikh-iyad/',
+    isSpecial: false,
   },
 ];
 
@@ -37,21 +47,49 @@ const Contributors = () => (
       Meet the amazing people who contributed to this project!
     </p>
 
-    <div className="grid grid-cols-1 gap-8 items-center justify-items-center">
-      {contributors.map(({ name, role, img, url }) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-center justify-items-center">
+      {contributors.map(({ name, role, img, url, isSpecial }) => (
         <div
           key={name}
-          className="p-6 rounded-xl shadow transition-transform hover:shadow-md w-64"
-          style={{ backgroundColor: CARD_BG }}
+          className={`p-6 rounded-xl transition-all duration-300 hover:shadow-md ${
+            isSpecial 
+              ? 'w-72 shadow-xl hover:shadow-2xl transform hover:scale-105' 
+              : 'w-64 shadow'
+          }`}
+          style={{
+            backgroundColor: CARD_BG,
+            border: isSpecial ? `2px solid ${BRAND}` : 'none',
+          }}
         >
           <img
             src={img}
             alt={name}
-            className="w-24 h-24 rounded-full mx-auto mb-4 object-cover"
+            className={`rounded-full mx-auto mb-4 object-cover ${
+              isSpecial ? 'w-28 h-28' : 'w-24 h-24'
+            }`}
           />
 
-          <h3 className="text-xl font-semibold text-[#333]">{name}</h3>
-          <p className="text-sm text-[#555]">{role}</p>
+          <h3 className={`font-semibold text-[#333] ${
+            isSpecial ? 'text-2xl' : 'text-xl'
+          }`}>
+            {name}
+          </h3>
+          
+          <p className={`text-[#555] ${
+            isSpecial ? 'text-base font-medium' : 'text-sm'
+          }`}>
+            {role}
+          </p>
+
+          {/* Special badge for Aatif */}
+          {isSpecial && (
+            <div 
+              className="mt-2 px-3 py-1 rounded-full text-xs font-semibold"
+              style={{ backgroundColor: BRAND, color: 'white' }}
+            >
+              Project Lead
+            </div>
+          )}
 
           {/* LinkedIn icon */}
           <a
@@ -61,7 +99,9 @@ const Contributors = () => (
             className="mt-3 inline-block transition-colors"
             style={{ color: BRAND }}
           >
-            <Linkedin className="h-6 w-6 mx-auto hover:opacity-80" />
+            <Linkedin className={`mx-auto hover:opacity-80 ${
+              isSpecial ? 'h-7 w-7' : 'h-6 w-6'
+            }`} />
           </a>
         </div>
       ))}
