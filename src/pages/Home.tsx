@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from '../assets/logo.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, BookOpen, Users, Award, Download } from 'lucide-react';
+import { getDashboardStats } from '../lib/supabase';
 
 const BRAND       = '#47677F'; // main brand colour
 const BRAND_LIGHT = '#5A7E97'; // lighter tint (hover, outline)
@@ -10,6 +11,37 @@ const CARD_BG     = '#D5C6BD'; // feature-card fill
 
 const Home = () => {
   const navigate = useNavigate();
+  
+  // Statistics state
+  const [stats, setStats] = useState({
+    programs: 16,
+    resources: 500,
+    downloads: 1000,
+    messages: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  // Load statistics
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        const dashboardStats = await getDashboardStats();
+        setStats({
+          programs: dashboardStats.programs,
+          resources: dashboardStats.resources,
+          downloads: dashboardStats.downloads,
+          messages: dashboardStats.messages
+        });
+      } catch (error) {
+        console.error('Failed to load statistics:', error);
+        // Keep default values if loading fails
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadStats();
+  }, []);
 
   /* ───────── feature-card click handler ───────── */
   const handleFeatureClick = (type: string) => {
@@ -90,6 +122,41 @@ const Home = () => {
                 <p className="text-gray-700">{description}</p>
               </button>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ───────── Platform Statistics Section ───────── */}
+      <section className="py-16" style={{ backgroundColor: BG_CREAM }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="rounded-lg p-8 text-center" style={{ backgroundColor: BRAND }}>
+            <h2 className="text-3xl font-bold text-white mb-8">Platform Statistics</h2>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+              <div>
+                <div className="text-4xl font-bold text-white mb-2">
+                  {loading ? '...' : `${stats.programs}+`}
+                </div>
+                <div style={{ color: '#E0F2FE' }}>Academic Programs</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-white mb-2">
+                  {loading ? '...' : `${stats.resources}+`}
+                </div>
+                <div style={{ color: '#E0F2FE' }}>Study Resources</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-white mb-2">
+                  {loading ? '...' : `${stats.downloads}+`}
+                </div>
+                <div style={{ color: '#E0F2FE' }}>Total Downloads</div>
+              </div>
+              <div>
+                <div className="text-4xl font-bold text-white mb-2">
+                  {loading ? '...' : `${stats.messages}+`}
+                </div>
+                <div style={{ color: '#E0F2FE' }}>Contact Messages</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
