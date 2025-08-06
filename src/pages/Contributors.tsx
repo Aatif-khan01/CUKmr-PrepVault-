@@ -29,7 +29,7 @@ const contributors = [
     name: 'Sheikh Iyad',
     role: 'Resource Manager',
     img:  IyadImg,
-    url:  'https://www.linkedin.com/in/sheikhiyadksa/',
+    url:  'https://www.linkedin.com/in/sheikh-iyad/',
     isSpecial: false,
   },
 ];
@@ -58,7 +58,7 @@ const Contributors = () => (
           }`}
           style={{
             backgroundColor: CARD_BG,
-            border: isSpecial ? `2px solid ${BRAND}` : 'none',
+            border: `2px solid ${BRAND}`, // Applied to all cards now
           }}
         >
           <img
