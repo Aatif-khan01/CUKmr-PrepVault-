@@ -13,6 +13,7 @@ const Admin = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [dashboardStats, setDashboardStats] = useState({
     programs: 0,
     resources: 0,
@@ -92,6 +93,20 @@ const Admin = () => {
     }
   };
 
+  const simulateUploadProgress = () => {
+    setUploadProgress(0);
+    const interval = setInterval(() => {
+      setUploadProgress(prev => {
+        if (prev >= 95) {
+          clearInterval(interval);
+          return 95; // Stop at 95% until actual upload completes
+        }
+        return prev + Math.random() * 15;
+      });
+    }, 200);
+    return interval;
+  };
+
   const handleFileUpload = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -102,13 +117,22 @@ const Admin = () => {
 
     try {
       setIsUploading(true);
+      setUploadProgress(0);
+      
+      // Start progress simulation
+      const progressInterval = simulateUploadProgress();
       
       // Upload file to Supabase Storage
       const { data: fileData, error: fileError } = await uploadFile(uploadForm.file);
       
       if (fileError) {
+        clearInterval(progressInterval);
         throw fileError;
       }
+
+      // Update progress to 100%
+      clearInterval(progressInterval);
+      setUploadProgress(100);
 
       // Get file size
       const fileSize = `${(uploadForm.file.size / 1024 / 1024).toFixed(2)} MB`;
@@ -150,6 +174,7 @@ const Admin = () => {
       toast.error('Failed to upload resource. Please try again.');
     } finally {
       setIsUploading(false);
+      setUploadProgress(0);
     }
   };
 
@@ -450,6 +475,25 @@ const Admin = () => {
                   Supported formats: PDF, DOC, DOCX (Max 10MB)
                 </p>
               </div>
+
+              {/* Upload Progress Bar */}
+              {isUploading && (
+                <div className="mt-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm font-medium text-gray-700">Upload Progress</span>
+                    <span className="text-sm text-gray-600">{Math.round(uploadProgress)}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div 
+                      className="bg-gradient-to-r from-blue-600 to-indigo-600 h-2.5 rounded-full transition-all duration-300 ease-out"
+                      style={{ width: `${uploadProgress}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {uploadProgress < 100 ? 'Uploading file...' : 'Processing upload...'}
+                  </p>
+                </div>
+              )}
 
               <button
                 type="submit"
