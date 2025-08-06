@@ -29,7 +29,7 @@ const contributors = [
     name: 'Sheikh Iyad',
     role: 'Resource Manager',
     img:  IyadImg,
-    url:  'https://www.linkedin.com/in/sheikh-iyad/',
+    url:  'https://www.linkedin.com/in/sheikhiyadksa/',
     isSpecial: false,
   },
 ];
