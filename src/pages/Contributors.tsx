@@ -2,6 +2,7 @@ import React from 'react';
 import { Linkedin } from 'lucide-react';
 import AatifImg from '../assets/Aatif.jpg';
 import AerafImg from '../assets/Aeraf.jpg';
+// import IyadImg from '../assets/Iyad.jpg'; // Add Sheikh Iyad's image
 
 /* ───────── Brand palette (same constants you used elsewhere) ───────── */
 const BRAND       = '#47677F';
@@ -22,6 +23,12 @@ const contributors = [
     img:  AerafImg,
     url:  'https://www.linkedin.com/in/mohammad-aeraf-rouf-dar-80ba0a323/',
   },
+  {
+    name: 'Sheikh Iyad',
+    role: 'Contributor', // Update with his specific role
+    img:  AerafImg, // Replace with IyadImg once you add his image
+    url:  'https://www.linkedin.com/in/sheikh-iyad/', // Replace with his actual LinkedIn URL
+  },
 ];
 
 const Contributors = () => (
@@ -37,7 +44,7 @@ const Contributors = () => (
       Meet the amazing people who contributed to this project!
     </p>
 
-    <div className="grid grid-cols-1 gap-8 items-center justify-items-center">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-center justify-items-center">
       {contributors.map(({ name, role, img, url }) => (
         <div
           key={name}
