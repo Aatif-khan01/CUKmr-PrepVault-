@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Lock, Upload, FileText, Users, BarChart3, Settings, Eye, EyeOff, Loader2, Trash2 } from 'lucide-react';
+import {
+  Lock, Upload, FileText, Users, BarChart3, Eye, EyeOff, Loader2, Trash2
+} from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { usePrograms } from '../hooks/usePrograms';
 import { useResources } from '../hooks/useResources';
-import { uploadFile, uploadResource, deleteResource, getDashboardStats, getContactMessages, getDownloadStats } from '../lib/supabase';
+import {
+  uploadFile, uploadResource, deleteResource,
+  getDashboardStats, getContactMessages, getDownloadStats
+} from '../lib/supabase';
 import toast from 'react-hot-toast';
+
+const MAX_FILE_SIZE_MB = 50;
 
 const Admin = () => {
   const { user, signIn, signOut } = useAuth();
@@ -22,10 +29,8 @@ const Admin = () => {
   });
   const [contactMessages, setContactMessages] = useState<any[]>([]);
   const [recentDownloads, setRecentDownloads] = useState<any[]>([]);
-
   const { programs } = usePrograms();
   const { resources, refetch: refetchResources } = useResources();
-
   const [uploadForm, setUploadForm] = useState({
     program_id: '',
     semester: 1,
@@ -47,7 +52,6 @@ const Admin = () => {
         getContactMessages(),
         getDownloadStats()
       ]);
-
       setDashboardStats(stats);
       setContactMessages(messages.data || []);
       setRecentDownloads(downloads.data || []);
@@ -58,20 +62,14 @@ const Admin = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!credentials.email || !credentials.password) {
       toast.error('Please enter both email and password');
       return;
     }
-
     try {
       setIsLoggingIn(true);
       const { error } = await signIn(credentials.email, credentials.password);
-      
-      if (error) {
-        throw error;
-      }
-      
+      if (error) throw error;
       toast.success('Successfully logged in!');
     } catch (error: any) {
       console.error('Login error:', error);
@@ -99,7 +97,7 @@ const Admin = () => {
       setUploadProgress(prev => {
         if (prev >= 95) {
           clearInterval(interval);
-          return 95; // Stop at 95% until actual upload completes
+          return 95;
         }
         return prev + Math.random() * 15;
       });
@@ -109,35 +107,26 @@ const Admin = () => {
 
   const handleFileUpload = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!uploadForm.program_id || !uploadForm.title || !uploadForm.file) {
       toast.error('Please fill in all required fields and select a file');
       return;
     }
-
+    if (uploadForm.file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+      toast.error(`File size exceeds ${MAX_FILE_SIZE_MB}MB limit`);
+      return;
+    }
     try {
       setIsUploading(true);
       setUploadProgress(0);
-      
-      // Start progress simulation
       const progressInterval = simulateUploadProgress();
-      
-      // Upload file to Supabase Storage
       const { data: fileData, error: fileError } = await uploadFile(uploadForm.file);
-      
       if (fileError) {
         clearInterval(progressInterval);
         throw fileError;
       }
-
-      // Update progress to 100%
       clearInterval(progressInterval);
       setUploadProgress(100);
-
-      // Get file size
       const fileSize = `${(uploadForm.file.size / 1024 / 1024).toFixed(2)} MB`;
-
-      // Save resource to database
       const { error: resourceError } = await uploadResource({
         program_id: uploadForm.program_id,
         semester: uploadForm.semester,
@@ -147,11 +136,7 @@ const Admin = () => {
         file_size: fileSize,
         uploaded_by: user?.id
       });
-
-      if (resourceError) {
-        throw resourceError;
-      }
-
+      if (resourceError) throw resourceError;
       toast.success('Resource uploaded successfully!');
       setUploadForm({
         program_id: '',
@@ -160,13 +145,8 @@ const Admin = () => {
         type: 'previous_year_papers',
         file: null
       });
-      
-      // Reset file input
       const fileInput = document.getElementById('file-upload') as HTMLInputElement;
-      if (fileInput) {
-        fileInput.value = '';
-      }
-      
+      if (fileInput) fileInput.value = '';
       refetchResources();
       loadDashboardData();
     } catch (error: any) {
@@ -179,17 +159,10 @@ const Admin = () => {
   };
 
   const handleDeleteResource = async (resourceId: string) => {
-    if (!confirm('Are you sure you want to delete this resource?')) {
-      return;
-    }
-
+    if (!confirm('Are you sure you want to delete this resource?')) return;
     try {
       const { error } = await deleteResource(resourceId);
-      
-      if (error) {
-        throw error;
-      }
-      
+      if (error) throw error;
       toast.success('Resource deleted successfully!');
       refetchResources();
       loadDashboardData();
@@ -211,7 +184,6 @@ const Admin = () => {
               <h2 className="text-2xl font-bold text-gray-900">Admin Access</h2>
               <p className="text-gray-600 mt-2">Please login to access the admin dashboard</p>
             </div>
-
             <form onSubmit={handleLogin} className="space-y-6">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
@@ -227,7 +199,6 @@ const Admin = () => {
                   required
                 />
               </div>
-
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
                   Password
@@ -255,7 +226,6 @@ const Admin = () => {
                   </button>
                 </div>
               </div>
-
               <button
                 type="submit"
                 disabled={isLoggingIn}
@@ -300,7 +270,6 @@ const Admin = () => {
             Logout
           </button>
         </div>
-
         {/* Tabs */}
         <div className="border-b border-gray-200 mb-8">
           <nav className="-mb-px flex space-x-8">
@@ -325,14 +294,13 @@ const Admin = () => {
             ))}
           </nav>
         </div>
-
         {/* Dashboard Tab */}
         {activeTab === 'dashboard' && (
           <div className="space-y-8">
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {stats.map((stat, index) => (
-                <div key={index} className="bg-white rounded-lg shadow-lg p-6">
+              {stats.map((stat, idx) => (
+                <div key={idx} className="bg-white rounded-lg shadow-lg p-6">
                   <div className="flex items-center">
                     <div className={`${stat.color} rounded-lg p-3`}>
                       <stat.icon className="h-6 w-6 text-white" />
@@ -345,7 +313,6 @@ const Admin = () => {
                 </div>
               ))}
             </div>
-
             {/* Recent Downloads */}
             <div className="bg-white rounded-lg shadow-lg">
               <div className="px-6 py-4 border-b border-gray-200">
@@ -355,20 +322,14 @@ const Admin = () => {
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Resource
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Type
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Downloaded At
-                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resource</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Downloaded At</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {recentDownloads.map((download, index) => (
-                      <tr key={index} className="hover:bg-gray-50">
+                    {recentDownloads.map((download, idx) => (
+                      <tr key={idx} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           {download.resource?.title || 'Unknown'}
                         </td>
@@ -388,7 +349,6 @@ const Admin = () => {
             </div>
           </div>
         )}
-
         {/* Upload Tab */}
         {activeTab === 'upload' && (
           <div className="bg-white rounded-lg shadow-lg p-8">
@@ -396,10 +356,8 @@ const Admin = () => {
             <form onSubmit={handleFileUpload} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Program *
-                  </label>
-                  <select 
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Program *</label>
+                  <select
                     value={uploadForm.program_id}
                     onChange={(e) => setUploadForm({ ...uploadForm, program_id: e.target.value })}
                     className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -407,16 +365,12 @@ const Admin = () => {
                   >
                     <option value="">Select Program</option>
                     {programs.map((program) => (
-                      <option key={program.id} value={program.id}>
-                        {program.name} ({program.type})
-                      </option>
+                      <option key={program.id} value={program.id}>{program.name} ({program.type})</option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Semester *
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Semester *</label>
                   <input
                     type="number"
                     min="1"
@@ -428,11 +382,8 @@ const Admin = () => {
                   />
                 </div>
               </div>
-
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Resource Type *
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Resource Type *</label>
                 <select
                   value={uploadForm.type}
                   onChange={(e) => setUploadForm({ ...uploadForm, type: e.target.value as any })}
@@ -444,11 +395,8 @@ const Admin = () => {
                   <option value="syllabus">Syllabus</option>
                 </select>
               </div>
-
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Title *
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Title *</label>
                 <input
                   type="text"
                   value={uploadForm.title}
@@ -458,11 +406,8 @@ const Admin = () => {
                   required
                 />
               </div>
-
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  File Upload *
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">File Upload *</label>
                 <input
                   type="file"
                   id="file-upload"
@@ -472,11 +417,9 @@ const Admin = () => {
                   required
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  Supported formats: PDF, DOC, DOCX (Max 10MB)
+                  Supported formats: PDF, DOC, DOCX (Max 50MB)
                 </p>
               </div>
-
-              {/* Upload Progress Bar */}
               {isUploading && (
                 <div className="mt-4">
                   <div className="flex justify-between items-center mb-2">
@@ -484,7 +427,7 @@ const Admin = () => {
                     <span className="text-sm text-gray-600">{Math.round(uploadProgress)}%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2.5">
-                    <div 
+                    <div
                       className="bg-gradient-to-r from-blue-600 to-indigo-600 h-2.5 rounded-full transition-all duration-300 ease-out"
                       style={{ width: `${uploadProgress}%` }}
                     ></div>
@@ -494,7 +437,6 @@ const Admin = () => {
                   </p>
                 </div>
               )}
-
               <button
                 type="submit"
                 disabled={isUploading}
@@ -512,7 +454,6 @@ const Admin = () => {
             </form>
           </div>
         )}
-
         {/* Manage Resources Tab */}
         {activeTab === 'manage' && (
           <div className="bg-white rounded-lg shadow-lg">
@@ -523,35 +464,19 @@ const Admin = () => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Title
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Program
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Semester
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Type
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Program</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Semester</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {resources.map((resource) => (
                     <tr key={resource.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {resource.title}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                        {resource.program?.name}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                        {resource.semester}
-                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{resource.title}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{resource.program?.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{resource.semester}</td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
                           {resource.type.replace('_', ' ')}
@@ -573,7 +498,6 @@ const Admin = () => {
             </div>
           </div>
         )}
-
         {/* Messages Tab */}
         {activeTab === 'messages' && (
           <div className="bg-white rounded-lg shadow-lg">
