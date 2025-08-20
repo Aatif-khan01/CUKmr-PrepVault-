@@ -63,7 +63,7 @@ const Home = () => {
       {/* ───────── Hero Section ───────── */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: BG_CREAM }}>
         <div className="max-w-7xl mx-auto text-center">
-          <img src={logo} alt="PrepVault+ Logo" className="mx-auto -mb-2 h-41 w-auto object-contain" />
+          <img src={logo} alt="PrepVault+ Logo" className="mx-auto -mb-2 h-40 w-auto object-contain" />
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
             Welcome to{' '}
