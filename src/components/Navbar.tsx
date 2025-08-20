@@ -30,7 +30,7 @@ const Navbar = () => {
 
           {/* ─────────── Logo ─────────── */}
           <Link to="/" className="flex items-center space-x-2">
-            <img src={logo} alt="Logo" className="h-[70px] w-auto object-contain" />
+            <img src={logo} alt="Logo" className="h-[68px] w-auto object-contain" />
             <span className="font-bold text-xl" style={{ color: BRAND }}>
               PrepVault+
             </span>
