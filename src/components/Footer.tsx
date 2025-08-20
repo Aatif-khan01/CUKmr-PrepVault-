@@ -14,15 +14,15 @@ const Footer = () => (
           <div className="flex items-center space-x-2 mb-4">
             <img
               src={logo}
-              alt="CUK PrepVault+ logo"
+              alt="PrepVault+ logo"
               className="h-8 w-auto object-contain"
             />
-            <span className="font-bold text-xl">CUK PrepVault+</span>
+            <span className="font-bold text-xl">PrepVault+</span>
           </div>
 
           <p className="text-gray-300 mb-6 max-w-md">
             Your comprehensive platform for accessing previous year papers, study
-            materials, and syllabus for all programs at Central University of Kashmir.
+            materials, and syllabus for all programs.
           </p>
 
           <div className="flex space-x-4">
@@ -79,7 +79,7 @@ const Footer = () => (
           <div className="space-y-2">
             <div className="flex items-center space-x-2 text-gray-300">
               <Mail className="h-4 w-4" />
-              <span className="text-sm">cukprepvault@gmail.com</span>
+              <span className="text-sm">prepvault@gmail.com</span>
             </div>
 
             <div className="flex items-center space-x-2 text-gray-300">
@@ -105,7 +105,7 @@ const Footer = () => (
       {/* ─────────── Copyright ─────────── */}
       <div className="border-t border-gray-700 mt-8 pt-8 text-center">
         <p className="text-gray-400 text-sm">
-          © 2025 CUKmr PrepVault+. Created with ❤️ for CUK students.
+          © 2025 PrepVault+. Created with ❤️ for students.
         </p>
       </div>
     </div>
