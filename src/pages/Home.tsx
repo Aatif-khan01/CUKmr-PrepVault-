@@ -68,13 +68,13 @@ const Home = () => {
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
             Welcome to{' '}
             <span style={{ color: BRAND }}>
-              CUKmr PrepVault+
+              PrepVault+
             </span>
           </h1>
 
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
             Your one-stop platform for accessing previous year papers, study notes, and syllabus for
-            all undergraduate and postgraduate programs at Central University of Kashmir.
+            all undergraduate and postgraduate programs.
           </p>
 
           <Link
