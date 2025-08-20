@@ -60,7 +60,7 @@ const Contact = () => {
               Get in Touch
             </h2>
             <p className="text-[#555] mb-8">
-              We&rsquo;re committed to helping you make the most of CUKmr PrepVault+.
+              We&rsquo;re committed to helping you make the most of PrepVault+.
               Reach out and we&rsquo;ll respond as soon as we can.
             </p>
 
@@ -77,7 +77,7 @@ const Contact = () => {
                   <h3 className="font-semibold" style={{ color: BRAND }}>
                     Email
                   </h3>
-                  <p className="text-[#555]">cukprepvault@gmail.com</p>
+                  <p className="text-[#555]">prepvault@gmail.com</p>
                   <p className="text-sm text-[#666] mt-1">
                     We typically respond within 24 hours
                   </p>
@@ -115,8 +115,8 @@ const Contact = () => {
                   <h3 className="font-semibold" style={{ color: BRAND }}>
                     Location
                   </h3>
-                  <p className="text-[#555]">Central University of Kashmir</p>
-                  <p className="text-[#555]">Ganderbal, J&K, India</p>
+                  <p className="text-[#555]"></p>
+                  <p className="text-[#555]">Srinagar, J&K, India</p>
                 </div>
               </div>
             </div>
@@ -138,7 +138,7 @@ const Contact = () => {
                 },
                 {
                   q: 'Are the resources free?',
-                  a: 'Yes, all resources on this platform are completely free for CUK students.',
+                  a: 'Yes, all resources on this platform are completely free for students.',
                 },
               ].map(({ q, a }) => (
                 <div key={q} className="p-4 rounded-lg" style={{ backgroundColor: CARD_BG }}>
