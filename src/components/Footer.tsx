@@ -15,7 +15,7 @@ const Footer = () => (
             <img
               src={logo}
               alt="PrepVault+ logo"
-              className="h-10 w-auto object-contain"
+              className="h-13 w-auto object-contain"
             />
             <span className="font-bold text-xl">PrepVault+</span>
           </div>
