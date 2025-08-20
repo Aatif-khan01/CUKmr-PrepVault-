@@ -42,7 +42,7 @@ const About = () => {
     {
       icon: Target,
       title: 'Our Mission',
-      description: 'To provide easy and centralized access to academic resources for all CUK students, enhancing their learning experience and academic performance.'
+      description: 'To provide easy and centralized access to academic resources for all students, enhancing their learning experience and academic performance.'
     },
     {
       icon: Users,
@@ -57,7 +57,7 @@ const About = () => {
     {
       icon: BookOpen,
       title: 'Comprehensive Coverage',
-      description: 'Resources available for all undergraduate and postgraduate programs offered at Central University of Kashmir.'
+      description: 'Resources available for all undergraduate and postgraduate programs.'
     }
   ];
 
@@ -68,7 +68,7 @@ const About = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl font-bold mb-4" style={{ color: BRAND }}>
-            About CUKmr PrepVault+
+            About PrepVault+
           </h1>
           <p className="text-lg text-[#555] max-w-3xl mx-auto">
             Empowering students with comprehensive academic resources to excel in their educational journey
@@ -82,8 +82,7 @@ const About = () => {
           </h2>
           <div className="prose prose-lg max-w-4xl mx-auto text-[#555]">
             <p className="mb-6">
-              CUKmr PrepVault+ was born out of a simple yet powerful idea: every student at 
-              Central University of Kashmir should have easy access to the academic resources they need to succeed.
+              PrepVault+ was born out of a simple yet powerful idea: every student should have easy access to the academic resources they need to succeed.
             </p>
             <p className="mb-6">
               As students ourselves, we experienced firsthand the challenges of finding previous year question papers, 
@@ -93,7 +92,7 @@ const About = () => {
             <p>
               Today, the hub serves students across all undergraduate and postgraduate programs, providing them 
               with the tools they need to excel in their academic pursuits. Our commitment remains unchanged: 
-              to support every CUK student in their educational journey.
+              to support every student in their educational journey.
             </p>
           </div>
         </div>
@@ -156,8 +155,7 @@ const About = () => {
           </h2>
           <div className="rounded-lg shadow-lg p-8 max-w-2xl mx-auto" style={{ backgroundColor: CARD_BG }}>
             <p className="text-[#555] mb-6">
-              This platform was developed with the sole purpose of helping fellow students at Central University 
-              of Kashmir. It represents our commitment to academic excellence and community support.
+              This platform was developed with the sole purpose of helping fellow students. It represents our commitment to academic excellence and community support.
             </p>
             <p className="text-sm text-[#666]">
               For suggestions, feedback, or contributions, please feel free to reach out through our contact page.
